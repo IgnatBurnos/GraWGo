@@ -1,10 +1,13 @@
 package org.example;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
+    //dodac tutaj player ktory widzialby czy jest jego tura gdzie ture zmieniamy na serwerze
     public static void main(String[] args) {
         final String SERVER_ADDRESS = "localhost";
         final int PORT = 12345;
@@ -24,8 +27,28 @@ public class Client {
             String response = in.nextLine();
             System.out.println("Odpowiedź od serwera: " + response);
 
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            Player receivedPlayer = (Player) objectInputStream.readObject();
+            System.out.println(receivedPlayer.get_surrender());
+
+
+            /**
+             * HERE U CAN CHANGE ANYTHING ABOUT THE CLIENT - THEN THE SERWER WILL TAKE CARE OF IT
+             */
+            receivedPlayer.licznik_ruchow += 1;
+
+
+            receivedPlayer.setYour_tour(false);
+            /**
+             * AT THE END CHANGE receivedPlayer.setYour_tour to flase to triger the next player
+             */
+
+
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println("player not recived");
+            throw new RuntimeException(e);
         }
     }
 }

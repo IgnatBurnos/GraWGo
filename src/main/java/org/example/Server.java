@@ -1,5 +1,6 @@
 package org.example;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,6 +20,7 @@ public class Server {
                 System.out.println("Nowe połączenie: " + clientSocket);
                 number_of_players += 1;
                 int finalNumber_of_players = number_of_players;
+
                 new Thread(() -> handleClient(clientSocket, finalNumber_of_players)).start();
 
                 if (number_of_players == 2) {
@@ -34,36 +36,35 @@ public class Server {
 
 
     private static void handleClient(Socket clientSocket, int number_of_players) {
-//        try (
-//                Scanner in = new Scanner(clientSocket.getInputStream());
-//                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
-//        ) {
-//            String message = in.nextLine();
-//            System.out.println("Odebrano wiadomość od klienta: " + message);
-//
-//            // Przykładowa odpowiedź serwera
-//            out.println("Otrzymałem wiadomość: " + message);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                clientSocket.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-
-
         Player player;
         if (number_of_players <= 2) {
             player = new Player(number_of_players);
             System.out.println("Hello player number " + number_of_players);
         } else {
             System.out.println("Cannot play in party larger than 2");
+            return;
         }
 
+
+        try (
+
+                Scanner in = new Scanner(clientSocket.getInputStream());
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
+        ) {
+
+            String message = in.nextLine();
+            System.out.println("Odebrano wiadomość od klienta: " + message);
+            out.print("hello");
+            // Przykładowa odpowiedź serwera
+            out.println("Otrzymałem wiadomość: " + message);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            objectOutputStream.writeObject(player);
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         try {
@@ -72,6 +73,10 @@ public class Server {
             e.printStackTrace();
         }
 
+
+    }
+
+    private void runTour() {
 
     }
 }

@@ -7,16 +7,42 @@ import java.util.Scanner;
 
 public class Server {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        final int PORT = 12345;
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 10; i++) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Serwer nasłuchuje na porcie " + PORT);
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Nowe połączenie: " + clientSocket);
+
+                new Thread(() -> handleClient(clientSocket)).start();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void handleClient(Socket clientSocket) {
+        try (
+                Scanner in = new Scanner(clientSocket.getInputStream());
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
+        ) {
+            String message = in.nextLine();
+            System.out.println("Odebrano wiadomość od klienta: " + message);
+
+            // Przykładowa odpowiedź serwera
+            out.println("Otrzymałem wiadomość: " + message);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

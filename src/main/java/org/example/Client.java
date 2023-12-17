@@ -27,28 +27,28 @@ public class Client {
             String response = in.nextLine();
             System.out.println("Odpowiedź od serwera: " + response);
 
-            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+
+
+
+/**            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             Player receivedPlayer = (Player) objectInputStream.readObject();
             System.out.println(receivedPlayer.get_surrender());
 
 
-            /**
-             * HERE U CAN CHANGE ANYTHING ABOUT THE CLIENT - THEN THE SERWER WILL TAKE CARE OF IT
-             */
+
+              HERE U CAN CHANGE ANYTHING ABOUT THE CLIENT - THEN THE SERWER WILL TAKE CARE OF IT
+
             receivedPlayer.licznik_ruchow += 1;
 
 
             receivedPlayer.setYour_tour(false);
-            /**
-             * AT THE END CHANGE receivedPlayer.setYour_tour to flase to triger the next player
-             */
 
+              AT THE END CHANGE receivedPlayer.setYour_tour to flase to triger the next player
+
+*/
 
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.out.println("player not recived");
-            throw new RuntimeException(e);
         }
     }
 }

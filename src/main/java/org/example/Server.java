@@ -15,18 +15,53 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Serwer nasłuchuje na porcie " + PORT);
             SerwerGame serwerGame = new SerwerGame();
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Nowe połączenie: " + clientSocket);
-                number_of_players += 1;
-                int finalNumber_of_players = number_of_players;
 
-                new Thread(() -> handleClient(clientSocket, finalNumber_of_players)).start();
+            Socket client1Socket = serverSocket.accept();
+            System.out.println("Nowe połączenie: " + client1Socket);
 
-                if (number_of_players == 2) {
+            Socket client2Socket = serverSocket.accept();
+            System.out.println("Nowe połączenie: " + client2Socket);
+
+            try (
+                    Scanner in1 = new Scanner(client1Socket.getInputStream());
+                    Scanner in2 = new Scanner(client2Socket.getInputStream());
+                    PrintWriter out1 = new PrintWriter(client1Socket.getOutputStream(), true);
+                    PrintWriter out2 = new PrintWriter(client2Socket.getOutputStream(), true)
+            ) {
+
+                /** @TODO
+                 * add selection of map size
+                 */
+                Player player1 = new Player();
+                Player player2 = new Player();
+                serwerGame.setPlayer1(player1);
+                serwerGame.setPlayer2(player2);
+                serwerGame.startGame(9, 9);
+
+                /**
+                 * @TODO
+                 * add implementatnio that sends player objeckt to Client, then client changes
+                 * stuff on his end, then take the objeckt back and set it as the player in game
+                 * */
 
 
+                while (serwerGame.getContinueGame()) {
+
+                    //player 1
+                    String message = in1.nextLine();
+                    System.out.println("Odebrano wiadomość od klienta: " + message);
+                    out1.println("Otrzymałem wiadomość: " + message);
+
+                    //wysylanie obiektu player
+
+                    //player 2
+                    String message2 = in2.nextLine();
+                    System.out.println("Odebrano wiadomość od klienta: " + message2);
+                    out2.println("Otrzymałem wiadomość: " + message2);
                 }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         } catch (IOException e) {
@@ -35,48 +70,4 @@ public class Server {
     }
 
 
-    private static void handleClient(Socket clientSocket, int number_of_players) {
-        Player player;
-        if (number_of_players <= 2) {
-            player = new Player(number_of_players);
-            System.out.println("Hello player number " + number_of_players);
-        } else {
-            System.out.println("Cannot play in party larger than 2");
-            return;
-        }
-
-
-        try (
-
-                Scanner in = new Scanner(clientSocket.getInputStream());
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
-        ) {
-
-            String message = in.nextLine();
-            System.out.println("Odebrano wiadomość od klienta: " + message);
-            out.print("hello");
-            // Przykładowa odpowiedź serwera
-            out.println("Otrzymałem wiadomość: " + message);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            objectOutputStream.writeObject(player);
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        try {
-            clientSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    private void runTour() {
-
-    }
 }

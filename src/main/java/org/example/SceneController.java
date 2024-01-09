@@ -15,6 +15,8 @@ public class SceneController {
     private Scene scene;
     private Parent root;
 
+    private int window_size = 1000;
+
     public void switchToSceneMenu(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view2.fxml"));
         root = fxmlLoader.load();
@@ -25,28 +27,25 @@ public class SceneController {
     }
 
     public void switchToSceneBord9(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("bord9.fxml"));
-        root = fxmlLoader.load();
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        GuiBoard guiBoard = new GuiBoard(9, window_size / 9 - 100/9);
+        scene = new Scene(guiBoard, window_size,window_size);
         stage.setScene(scene);
         stage.show();
     }
 
     public void switchToSceneBord13(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("bord13.fxml"));
-        root = fxmlLoader.load();
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        GuiBoard guiBoard = new GuiBoard(13, window_size / 13 - 100/13);
+        scene = new Scene(guiBoard, window_size,window_size);
         stage.setScene(scene);
         stage.show();
     }
 
     public void switchToSceneBord19(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("bord19.fxml"));
-        root = fxmlLoader.load();
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        GuiBoard guiBoard = new GuiBoard(19, window_size / 19 - 100/19);
+        scene = new Scene(guiBoard, window_size,window_size);
         stage.setScene(scene);
         stage.show();
     }

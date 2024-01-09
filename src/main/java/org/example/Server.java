@@ -32,8 +32,8 @@ public class Server {
                 /** @TODO
                  * add selection of map size
                  */
-                Player player1 = new Player();
-                Player player2 = new Player();
+                Player player1 = new Player(1);
+                Player player2 = new Player(2);
                 serwerGame.setPlayer1(player1);
                 serwerGame.setPlayer2(player2);
                 serwerGame.startGame(9, 9);

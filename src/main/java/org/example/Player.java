@@ -29,5 +29,13 @@ public class Player implements Serializable{
         return your_tour;
     }
 
+    private int playerId;
 
+    public int getId() {
+        return playerId;
+    }
+
+    public Player(int id) {
+        this.playerId = id;
+    }
 }
